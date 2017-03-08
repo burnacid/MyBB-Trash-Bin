@@ -19,13 +19,13 @@ function trashbin_info()
 {
     return array(
         'name' => 'Trash Bin',
-        'description' => 'Moves all permanently deleted threads to a trashbin',
+        'description' => 'Moves all permanently deleted threads to a trashbin for 60 days',
         'website' => 'http://lenders-it.nl',
         'author' => 'S. Lenders',
         'authorsite' => 'http://lenders-it.nl',
-        'version' => '0.1',
+        'version' => '1',
         'compatibility' => '18*',
-        'guid' => '');
+        'codename' => 'trashbin');
 }
 
 function trashbin_install()
@@ -109,10 +109,10 @@ function trashbin_install()
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;");
 
     }
-    
+
     if (!$db->table_exists('trashbin_posts_single'))
     {
-        $db->write_query("CREATE TABLE IF NOT EXISTS `".TABLE_PREFIX."trashbin_posts_single` (
+        $db->write_query("CREATE TABLE IF NOT EXISTS `" . TABLE_PREFIX . "trashbin_posts_single` (
           `pid` int(10) unsigned NOT NULL,
           `tid` int(10) unsigned NOT NULL DEFAULT '0',
           `replyto` int(10) unsigned NOT NULL DEFAULT '0',
@@ -145,7 +145,7 @@ function trashbin_install()
         ");
 
     }
-    
+
 }
 function trashbin_activate()
 {
@@ -196,7 +196,7 @@ function trashbin_delete_post($pid)
     {
         $post = $db->fetch_array($query);
         $post = trashbin_escape_post($post);
-        
+
         $post['deletetime'] = time();
         $post['deletedby'] = $mybb->user['uid'];
 
@@ -212,26 +212,31 @@ function trashbin_restore_post($pid)
 
     if ($db->num_rows($query) == 1)
     {
-        $post = $db->fetch_array($query);       
+        $post = $db->fetch_array($query);
         $thread = get_thread($post['tid']);
-        
-        if($thread){
+
+        if ($thread)
+        {
             $post = trashbin_escape_post($post);
-        
+
             unset($post['deletetime']);
             unset($post['deletedby']);
-    
+
             $db->insert_query("posts", $post);
-            
-            $db->delete_query("trashbin_posts_single","pid = ". intval($pid));
-            
+
+            $db->delete_query("trashbin_posts_single", "pid = " . intval($pid));
+
             return array(true);
-        }else{
-            return array(false,"Thread does not longer exist!");
         }
-        
-    }else{
-        return array(false,"The post your are trying to restore is not found!");
+        else
+        {
+            return array(false, "Thread does not longer exist!");
+        }
+
+    }
+    else
+    {
+        return array(false, "The post your are trying to restore is not found!");
     }
 }
 
@@ -280,21 +285,22 @@ function trashbin_restore_thread($tid)
         }
 
         $db->insert_query("threads", $thread);
-        
-        $db->delete_query("trashbin_posts","tid = ". intval($tid));
-        $db->delete_query("trashbin_threads","tid = ". intval($tid));
+
+        $db->delete_query("trashbin_posts", "tid = " . intval($tid));
+        $db->delete_query("trashbin_threads", "tid = " . intval($tid));
     }
 }
 
-function trashbin_escape_post($post){
+function trashbin_escape_post($post)
+{
     global $db;
-    
+
     $post['subject'] = $db->escape_string($post['subject']);
     $post['username'] = $db->escape_string($post['username']);
     $post['message'] = $db->escape_string($post['message']);
     $post['editreason'] = $db->escape_string($post['editreason']);
     $post['tags'] = $db->escape_string($post['tags']);
-    
+
     return $post;
 }
 
@@ -310,7 +316,7 @@ function trashbin_admin_config_action_handler(&$actions)
     $actions['trashbin'] = array(
         'active' => 'trashbin',
         'file' => 'trashbin.php',
-    );
+        );
 }
 
 class trashbin
@@ -352,9 +358,12 @@ class trashbin
             flash_message($message, ($error ? 'error' : 'success'));
         }
 
-        if($action != ""){
+        if ($action != "")
+        {
             $parm = array("action" => $action);
-        }else{
+        }
+        else
+        {
             $parm = array();
         }
 

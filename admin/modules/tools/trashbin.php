@@ -117,10 +117,13 @@ elseif ($mybb->get_input('action') == 'postrestore')
     if ($mybb->input['pid'])
     {
         $result = trashbin_restore_post($mybb->input['pid']);
-    
-        if($result[0]){
+
+        if ($result[0])
+        {
             $trashbin->admin_redirect("The selected post has been restored.", false, "posts");
-        }else{
+        }
+        else
+        {
             $trashbin->admin_redirect($result[1], true, "posts");
         }
     }
