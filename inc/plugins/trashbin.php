@@ -274,22 +274,37 @@ function trashbin_restore_thread($tid)
     if ($db->num_rows($query) == 1)
     {
         $thread = $db->fetch_array($query);
-        $thread = trashbin_escape_thread($thread);
-        $thread['deletetime'] = 0;
-        unset($thread['deletedby']);
+        $forum = get_forum($thread['fid']);
 
-        $query2 = $db->simple_select("trashbin_posts", "*", "tid = " . intval($tid));
-
-        while ($post = $db->fetch_array($query2))
+        if ($forum)
         {
-            $post = trashbin_escape_post($post);
-            $db->insert_query("posts", $post);
+            $thread = trashbin_escape_thread($thread);
+            $thread['deletetime'] = 0;
+            unset($thread['deletedby']);
+
+            $query2 = $db->simple_select("trashbin_posts", "*", "tid = " . intval($tid));
+
+            while ($post = $db->fetch_array($query2))
+            {
+                $post = trashbin_escape_post($post);
+                $db->insert_query("posts", $post);
+            }
+
+            $db->insert_query("threads", $thread);
+
+            $db->delete_query("trashbin_posts", "tid = " . intval($tid));
+            $db->delete_query("trashbin_threads", "tid = " . intval($tid));
+
+            return array(true);
         }
-
-        $db->insert_query("threads", $thread);
-
-        $db->delete_query("trashbin_posts", "tid = " . intval($tid));
-        $db->delete_query("trashbin_threads", "tid = " . intval($tid));
+        else
+        {
+            return array(false, "Forum does not longer exist!");
+        }
+    }
+    else
+    {
+        return array(false, "The thread your are trying to restore is not found!");
     }
 }
 

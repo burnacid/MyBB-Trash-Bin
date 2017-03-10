@@ -118,9 +118,16 @@ elseif ($mybb->get_input('action') == 'threadrestore')
 {
     if ($mybb->input['tid'])
     {
-        trashbin_restore_thread($mybb->input['tid']);
+        $result = trashbin_restore_thread($mybb->input['tid']);
 
-        $trashbin->admin_redirect("The selected thread has been restored.");
+        if ($result[0])
+        {
+            $trashbin->admin_redirect("The selected thread has been restored.", false);
+        }
+        else
+        {
+            $trashbin->admin_redirect($result[1], true);
+        }
     }
     else
     {
