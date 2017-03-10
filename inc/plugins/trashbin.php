@@ -23,7 +23,7 @@ function trashbin_info()
         'website' => 'http://lenders-it.nl',
         'author' => 'S. Lenders',
         'authorsite' => 'http://lenders-it.nl',
-        'version' => '0.2',
+        'version' => '0.2.1',
         'compatibility' => '18*',
         'codename' => 'trashbin');
 }
@@ -57,7 +57,6 @@ function trashbin_install()
           `edittime` int(10) unsigned NOT NULL DEFAULT '0',
           `editreason` varchar(150) NOT NULL DEFAULT '',
           `visible` tinyint(1) NOT NULL DEFAULT '0',
-          `tags` text NOT NULL,
           PRIMARY KEY (`pid`),
           KEY `tid` (`tid`,`uid`),
           KEY `uid` (`uid`),
@@ -130,7 +129,6 @@ function trashbin_install()
           `edittime` int(10) unsigned NOT NULL DEFAULT '0',
           `editreason` varchar(150) NOT NULL DEFAULT '',
           `visible` tinyint(1) NOT NULL DEFAULT '0',
-          `tags` text NOT NULL,
           `deletetime` int(10) unsigned NOT NULL DEFAULT '0',
           `deletedby` int(10) unsigned NOT NULL DEFAULT '0',
           PRIMARY KEY (`pid`),
