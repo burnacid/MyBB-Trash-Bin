@@ -23,7 +23,7 @@ function trashbin_info()
         'website' => 'http://lenders-it.nl',
         'author' => 'S. Lenders',
         'authorsite' => 'http://lenders-it.nl',
-        'version' => '0.2.1',
+        'version' => '0.2.3',
         'compatibility' => '18*',
         'codename' => 'trashbin');
 }
@@ -314,7 +314,6 @@ function trashbin_escape_post($post)
     $post['username'] = $db->escape_string($post['username']);
     $post['message'] = $db->escape_string($post['message']);
     $post['editreason'] = $db->escape_string($post['editreason']);
-    $post['tags'] = $db->escape_string($post['tags']);
 
     return $post;
 }
