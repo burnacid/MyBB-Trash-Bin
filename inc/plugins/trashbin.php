@@ -23,7 +23,7 @@ function trashbin_info()
         'website' => 'http://lenders-it.nl',
         'author' => 'S. Lenders',
         'authorsite' => 'http://lenders-it.nl',
-        'version' => '1',
+        'version' => '0.2',
         'compatibility' => '18*',
         'codename' => 'trashbin');
 }
