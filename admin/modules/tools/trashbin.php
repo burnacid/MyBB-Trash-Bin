@@ -45,15 +45,15 @@ if ($mybb->get_input('action') == 'posts')
     $total = $db->num_rows($numquery);
     
     if($mybb->input['page']){
-        $page = intval($mybb->input['page']);
+        $pagenr = intval($mybb->input['page']);
         $pagestart = (($page - 1) * 30);
         
-        if((($page - 1) * 30) > $total){
-            $page = 1;
+        if((($pagenr - 1) * 30) > $total){
+            $pagenr = 1;
             $pagestart = 0;
         } 
     }else{
-        $page = 1;
+        $pagenr = 1;
         $pagestart = 0;
     }
 
@@ -109,7 +109,7 @@ if ($mybb->get_input('action') == 'posts')
         }
         $table->output("Post Trash Bin");
         
-        echo draw_admin_pagination($page,30,$total,$trashbin->build_url(array("action" => "posts")));
+        echo draw_admin_pagination($pagenr,30,$total,$trashbin->build_url(array("action" => "posts")));
     }
 
     $page->output_footer();
@@ -173,15 +173,15 @@ else
     $total = $db->num_rows($numquery);
     
     if($mybb->input['page']){
-        $page = intval($mybb->input['page']);
+        $pagenr = intval($mybb->input['page']);
         $pagestart = (($page - 1) * 30);
         
-        if((($page - 1) * 30) > $total){
+        if((($pagenr - 1) * 30) > $total){
             $page = 1;
             $pagestart = 0;
         } 
     }else{
-        $page = 1;
+        $pagenr = 1;
         $pagestart = 0;
     }
     
@@ -224,7 +224,7 @@ else
         }
         $table->output("Threads Trash Bin");
         
-        echo draw_admin_pagination($page,30,$total,$trashbin->build_url());
+        echo draw_admin_pagination($pagenr,30,$total,$trashbin->build_url());
     }
 
     $page->output_footer();
