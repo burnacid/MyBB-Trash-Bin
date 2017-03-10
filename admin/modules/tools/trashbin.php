@@ -41,8 +41,23 @@ if ($mybb->get_input('action') == 'posts')
     $table->construct_header("Deleted on", array());
     $table->construct_header("", array());
 
+    $numquery = $db->simple_select('trashbin_posts_single', '*', '');
+    $total = $db->num_rows($numquery);
+    
+    if($mybb->input['page']){
+        $page = intval($mybb->input['page']);
+        $pagestart = (($page - 1) * 30);
+        
+        if((($page - 1) * 30) > $total){
+            $page = 1;
+            $pagestart = 0;
+        } 
+    }else{
+        $page = 1;
+        $pagestart = 0;
+    }
 
-    $query = $db->simple_select('trashbin_posts_single', '*', '', array("order_by" => "deletetime"));
+    $query = $db->simple_select('trashbin_posts_single', '*', '', array("order_by" => "deletetime","order_dir" => "DESC","limit_start" => $pagestart,"limit" => 30));
 
     if (!$db->num_rows($query))
     {
@@ -93,8 +108,8 @@ if ($mybb->get_input('action') == 'posts')
             $table->construct_row();
         }
         $table->output("Post Trash Bin");
-
-        $form->end();
+        
+        echo draw_admin_pagination($page,30,$total,$trashbin->build_url(array("action" => "posts")));
     }
 
     $page->output_footer();
@@ -147,8 +162,23 @@ else
     $table->construct_header("Deleted on", array());
     $table->construct_header("", array());
 
-
-    $query = $db->simple_select('trashbin_threads', '*', '', array("order_by" => "deletetime"));
+    $numquery = $db->simple_select('trashbin_threads', '*', '');
+    $total = $db->num_rows($numquery);
+    
+    if($mybb->input['page']){
+        $page = intval($mybb->input['page']);
+        $pagestart = (($page - 1) * 30);
+        
+        if((($page - 1) * 30) > $total){
+            $page = 1;
+            $pagestart = 0;
+        } 
+    }else{
+        $page = 1;
+        $pagestart = 0;
+    }
+    
+    $query = $db->simple_select('trashbin_threads', '*', '', array("order_by" => "deletetime","order_dir" => "DESC","limit_start" => $pagestart,"limit" => 30));
 
     if (!$db->num_rows($query))
     {
@@ -186,8 +216,8 @@ else
             $table->construct_row();
         }
         $table->output("Threads Trash Bin");
-
-        $form->end();
+        
+        echo draw_admin_pagination($page,30,$total,$trashbin->build_url());
     }
 
     $page->output_footer();

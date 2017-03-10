@@ -249,6 +249,7 @@ function trashbin_delete_thread($tid)
     if ($db->num_rows($query) == 1)
     {
         $thread = $db->fetch_array($query);
+        $thread = trashbin_escape_thread($thread);
         $thread['deletetime'] = time();
         $thread['deletedby'] = $mybb->user['uid'];
 
@@ -273,6 +274,7 @@ function trashbin_restore_thread($tid)
     if ($db->num_rows($query) == 1)
     {
         $thread = $db->fetch_array($query);
+        $thread = trashbin_escape_thread($thread);
         $thread['deletetime'] = 0;
         unset($thread['deletedby']);
 
@@ -302,6 +304,18 @@ function trashbin_escape_post($post)
     $post['tags'] = $db->escape_string($post['tags']);
 
     return $post;
+}
+
+function trashbin_escape_thread($thread)
+{
+    global $db;
+
+    $thread['subject'] = $db->escape_string($thread['subject']);
+    $thread['username'] = $db->escape_string($thread['username']);
+    $thread['lastposter'] = $db->escape_string($thread['lastposter']);
+    $thread['closed'] = $db->escape_string($thread['closed']);
+
+    return $thread;
 }
 
 $plugins->add_hook('admin_tools_permissions', 'trashbin_admin_tools_permissions');
