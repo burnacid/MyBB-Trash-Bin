@@ -22,7 +22,7 @@ function trashbin_info()
     return array(
         'name' => 'Trash Bin',
         'description' => 'Moves all permanently deleted threads to a trashbin for 60 days',
-        'website' => 'http://lenders-it.nl',
+        'website' => 'https://github.com/burnacid/MyBB-Trash-Bin',
         'author' => 'S. Lenders',
         'authorsite' => 'http://lenders-it.nl',
         'version' => '0.2.4',
