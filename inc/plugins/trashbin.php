@@ -23,7 +23,7 @@ function trashbin_info()
         'website' => 'http://lenders-it.nl',
         'author' => 'S. Lenders',
         'authorsite' => 'http://lenders-it.nl',
-        'version' => '0.2.3',
+        'version' => '0.2.4',
         'compatibility' => '18*',
         'codename' => 'trashbin');
 }
@@ -188,7 +188,9 @@ function trashbin_delete_post($pid)
 {
     global $db, $mybb;
 
-    $query = $db->simple_select("posts", "*", "pid = " . intval($pid));
+    $query = $db->simple_select("posts",
+        "pid, tid, replyto, fid, subject, icon, uid, username, dateline, message, ipaddress, includesig, smilieoff, edituid, edittime, editreason, visible",
+        "pid = " . intval($pid));
 
     if ($db->num_rows($query) == 1)
     {
@@ -242,7 +244,9 @@ function trashbin_delete_thread($tid)
 {
     global $db, $mybb;
 
-    $query = $db->simple_select("threads", "*", "tid = " . intval($tid));
+    $query = $db->simple_select("threads",
+        "tid, fid, subject, prefix, icon, poll, uid, username, dateline, firstpost, lastpost, lastposter, lastposteruid, views, replies, closed, sticky, numratings, totalratings, notes, visible, unapprovedposts, deletedposts, attachmentcount, deletetime",
+        "tid = " . intval($tid));
 
     if ($db->num_rows($query) == 1)
     {
@@ -251,7 +255,9 @@ function trashbin_delete_thread($tid)
         $thread['deletetime'] = time();
         $thread['deletedby'] = $mybb->user['uid'];
 
-        $query2 = $db->simple_select("posts", "*", "tid = " . intval($tid));
+        $query2 = $db->simple_select("posts",
+            "pid, tid, replyto, fid, subject, icon, uid, username, dateline, message, ipaddress, includesig, smilieoff, edituid, edittime, editreason, visible",
+            "tid = " . intval($tid));
 
         while ($post = $db->fetch_array($query2))
         {
