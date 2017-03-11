@@ -11,8 +11,10 @@ if (defined('IN_ADMINCP'))
 }
 else
 {
-    $plugins->add_hook("class_moderation_delete_thread_start", "trashbin_delete_thread");
-    $plugins->add_hook("class_moderation_delete_post_start", "trashbin_delete_post");
+    if($mybb->settings['trashbin_enabled']){
+        $plugins->add_hook("class_moderation_delete_thread_start", "trashbin_delete_thread");
+        $plugins->add_hook("class_moderation_delete_post_start", "trashbin_delete_post");
+    }
 }
 
 function trashbin_info()
@@ -147,7 +149,29 @@ function trashbin_install()
 }
 function trashbin_activate()
 {
+    global $PL;
+    $PL or require_once PLUGINLIBRARY;
+    
+    $PL->settings('trashbin',
+          'Trash Bin',
+          'Settings for trash bin plugin',
+          array(
+              'enabled' => array(
+                  'title' => 'Trash Bin enabled',
+                  'description' => 'Will threads and posts be put in the trash bin',
+                  'value' => 1
+                  ),
+              'retention' => array(
+                  'title' => 'Trash bin retention',
+                  'description' => 'How long will a thread or post be saved in the trash bin before getting removed',
+                  'optionscode' => 'text',
+                  'value' => 60
+                  )
+              )
+    );
+    
     change_admin_permission('tools', 'trashbin', 1);
+    
 }
 function trashbin_is_installed()
 {
@@ -158,6 +182,10 @@ function trashbin_is_installed()
 }
 function trashbin_deactivate()
 {
+    global $PL;
+    $PL or require_once PLUGINLIBRARY;
+    
+    $PL->settings_delete('trashbin');
     change_admin_permission('tools', 'trashbin', -1);
 }
 function trashbin_uninstall()
