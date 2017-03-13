@@ -46,7 +46,7 @@ if ($mybb->get_input('action') == 'posts')
     
     if($mybb->input['page']){
         $pagenr = intval($mybb->input['page']);
-        $pagestart = (($page - 1) * 30);
+        $pagestart = (($pagenr - 1) * 30);
         
         if((($pagenr - 1) * 30) > $total){
             $pagenr = 1;
@@ -174,10 +174,10 @@ else
     
     if($mybb->input['page']){
         $pagenr = intval($mybb->input['page']);
-        $pagestart = (($page - 1) * 30);
+        $pagestart = (($pagenr - 1) * 30);
         
         if((($pagenr - 1) * 30) > $total){
-            $page = 1;
+            $pagenr = 1;
             $pagestart = 0;
         } 
     }else{
