@@ -7,6 +7,4 @@ Features
 * Permanently deleted threads with their posts are put into a trash bin
 * Permanently deleted posts are put into a seperate trash bin
 * Admins can restore full threads and single posts
-
-To-Do
 * Automaticly remove times after X days
