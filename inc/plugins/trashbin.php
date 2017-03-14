@@ -149,8 +149,9 @@ function trashbin_install()
 }
 function trashbin_activate()
 {
-    global $PL;
+    global $PL, $db;
     $PL or require_once PLUGINLIBRARY;
+    require_once MYBB_ROOT."/inc/functions_task.php";    
     
     $PL->settings('trashbin',
           'Trash Bin',
@@ -172,6 +173,22 @@ function trashbin_activate()
     
     change_admin_permission('tools', 'trashbin', 1);
     
+    $new_task = array(
+		"title" => $db->escape_string("Trash Bin Cleanup"),
+		"description" => $db->escape_string("Removes items from trash bin after X days (defined in forum settings)"),
+		"file" => $db->escape_string("trashbincleanup"),
+		"minute" => $db->escape_string("30"),
+		"hour" => $db->escape_string("0"),
+		"day" => $db->escape_string("*"),
+		"month" => $db->escape_string("*"),
+		"weekday" => $db->escape_string("*"),
+		"enabled" => 1,
+		"logging" => 1
+	);
+
+	$new_task['nextrun'] = fetch_next_run($new_task);
+	$tid = $db->insert_query("tasks", $new_task);
+    
 }
 function trashbin_is_installed()
 {
@@ -182,11 +199,13 @@ function trashbin_is_installed()
 }
 function trashbin_deactivate()
 {
-    global $PL;
+    global $PL,$db;
     $PL or require_once PLUGINLIBRARY;
     
     $PL->settings_delete('trashbin');
     change_admin_permission('tools', 'trashbin', -1);
+    
+    $db->delete_query("tasks","file = 'trashbincleanup'");
 }
 function trashbin_uninstall()
 {
