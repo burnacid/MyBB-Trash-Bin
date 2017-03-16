@@ -22,7 +22,7 @@ function trashbin_info()
         'website' => 'https://github.com/burnacid/MyBB-Trash-Bin',
         'author' => 'S. Lenders',
         'authorsite' => 'http://lenders-it.nl',
-        'version' => '0.2.4',
+        'version' => '1.1',
         'compatibility' => '18*',
         'codename' => 'trashbin');
 }
