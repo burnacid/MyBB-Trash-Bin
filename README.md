@@ -8,3 +8,4 @@ Features
 * Permanently deleted posts are put into a seperate trash bin
 * Admins can restore full threads and single posts
 * Automaticly remove times after X days
+* View removed threads and posts content within ACP
