@@ -1,6 +1,7 @@
 <?php
 
 $trashbin = new trashbin;
+$lang->load('trashbin');
 
 $sub_tabs['trashbin_threads'] = array(
     'title' => $lang->trashbin_thread_bin,
@@ -122,9 +123,9 @@ if ($mybb->get_input('action') == 'posts') {
 
     require_once MYBB_ROOT . "inc/class_parser.php";
 
-    $page->add_breadcrumb_item("Trash Bin", "index.php?module=tools-trashbin");
-    $page->add_breadcrumb_item("Thread Post", "");
-    $page->output_header("Trash Bin");
+    $page->add_breadcrumb_item($lang->trashbin, "index.php?module=tools-trashbin");
+    $page->add_breadcrumb_item($thread->trashbin_view_thread, "");
+    $page->output_header($lang->trashbin);
     $page->output_nav_tabs($sub_tabs, 'trashbin_viewthread');
 
     if ($mybb->input['tid']) {
@@ -187,14 +188,14 @@ if ($mybb->get_input('action') == 'posts') {
                     echo draw_admin_pagination($pagenr, 10, $total, $trashbin->build_url(array("action"=>"viewthread","tid"=>$thread['tid'])));
                 }
             } else {
-                $trashbin->admin_redirect("This thread does not contain any posts!", true, "posts");
+                $trashbin->admin_redirect($lang->trashbin_no_posts, true, "posts");
             }
         } else {
-            $trashbin->admin_redirect("The thread you tried to view doesn't exist!", true, "posts");
+            $trashbin->admin_redirect($lang->trashbin_no_thread_exists, true, "posts");
         }
 
     } else {
-        $trashbin->admin_redirect("The thread you tried to view doesn't exist!", true, "posts");
+        $trashbin->admin_redirect($lang->trashbin_no_thread_exists, true, "posts");
     }
 
 
@@ -203,9 +204,9 @@ if ($mybb->get_input('action') == 'posts') {
 
     require_once MYBB_ROOT . "inc/class_parser.php";
 
-    $page->add_breadcrumb_item("Trash Bin", "index.php?module=tools-trashbin&action=posts");
-    $page->add_breadcrumb_item("View Post", "");
-    $page->output_header("Trash Bin");
+    $page->add_breadcrumb_item($lang->trashbin, "index.php?module=tools-trashbin&action=posts");
+    $page->add_breadcrumb_item($lang->trashbin_view_post, "");
+    $page->output_header($lang->trashbin);
     $page->output_nav_tabs($sub_tabs, 'trashbin_viewpost');
 
     if ($mybb->input['pid']) {
@@ -224,11 +225,11 @@ if ($mybb->get_input('action') == 'posts') {
 
             $table->output("");
         } else {
-            $trashbin->admin_redirect("The post you tried to view doesn't exist!", true, "posts");
+            $trashbin->admin_redirect($lang->trashbin_no_post_exists, true, "posts");
         }
 
     } else {
-        $trashbin->admin_redirect("The post you tried to view doesn't exist!", true, "posts");
+        $trashbin->admin_redirect($lang->trashbin_no_post_exists, true, "posts");
     }
 
 
@@ -259,8 +260,8 @@ if ($mybb->get_input('action') == 'posts') {
     }
 } else {
 
-    $page->add_breadcrumb_item("Trash Bin", "");
-    $page->output_header("Trash Bin");
+    $page->add_breadcrumb_item($lang->trashbin, "");
+    $page->output_header($lang->trashbin);
     $page->output_nav_tabs($sub_tabs, 'trashbin_threads');
 
     $table = new Table;
