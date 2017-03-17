@@ -367,13 +367,11 @@ function trashbin_admin_config_action_handler(&$actions)
 
 function trashbin_parse_post($post,$num)
 {
-    global $lang;
-    
     $poster = get_user($post['uid']);
     
     if($post['edituid']){
         $edituser = get_user($post['edituid']);
-        $edit = "<span class='post_edit' id='edited_by_6092' ><span class='edited_post' >(".$lang->trashbin_edited.": ".date("d-m-Y h:i A",$post['edittime'])." ".$lang->trashbin_by." ".build_profile_link($edituser['username'],$edituser['uid']).".)</span></span>";
+        $edit = "<span class='post_edit' id='edited_by_6092' ><span class='edited_post' >(This post was last modified: ".date("d-m-Y h:i A",$post['edittime'])." by ".build_profile_link($edituser['username'],$edituser['uid']).".)</span></span>";
     }
     
     $parser = new postParser; 
