@@ -3,52 +3,52 @@
 $trashbin = new trashbin;
 
 $sub_tabs['trashbin_threads'] = array(
-    'title' => 'Thread Trash Bin',
+    'title' => $lang->trashbin_thread_bin,
     'link' => 'index.php?module=tools-trashbin',
-    'description' => 'View all removed threads.');
+    'description' => $lang->trashbin_thread_bin_desc);
 $sub_tabs['trashbin_posts'] = array(
-    'title' => 'Post Trash Bin',
+    'title' => $lang->trashbin_post_bin,
     'link' => 'index.php?module=tools-trashbin&amp;action=posts',
-    'description' => 'View all removed posts.');
+    'description' => $lang->trashbin_post_bin_desc);
 
 switch ($mybb->get_input('action')) {
     case 'threadrestore':
         $sub_tabs['trashbin_threadrestore'] = array(
-            'title' => "Restore thread",
+            'title' => $lang->trashbin_restore_thread,
             'link' => 'index.php?module=tools-trashbin&amp;action=threadrestore&amp;tid=' . $mybb->input['tid'],
             'description' => "");
         break;
     case 'postrestore':
         $sub_tabs['trashbin_postrestore'] = array(
-            'title' => "Restore post",
+            'title' => $lang->trashbin_post,
             'link' => 'index.php?module=tools-trashbin&amp;action=postrestore&amp;pid=' . $mybb->input['pid'],
             'description' => "");
         break;
     case 'viewthread':
         $sub_tabs['trashbin_viewthread'] = array(
-            'title' => "View Thread",
+            'title' => $lang->trashbin_view_thread,
             'link' => 'index.php?module=tools-trashbin&amp;action=viewthread&amp;tid=' . $mybb->input['tid'],
-            'description' => "View thread");
+            'description' => $lang->trashbin_view_thread_desc);
         break;
     case 'viewpost':
         $sub_tabs['trashbin_viewpost'] = array(
-            'title' => "View Post",
+            'title' => $lang->trashbin_view_post,
             'link' => 'index.php?module=tools-trashbin&amp;action=viewpost&amp;pid=' . $mybb->input['pid'],
-            'description' => "View single post");
+            'description' => $lang->trashbin_view_post_desc);
         break;
 }
 
 if ($mybb->get_input('action') == 'posts') {
-    $page->add_breadcrumb_item("Trash Bin", "");
-    $page->output_header("Trash Bin");
+    $page->add_breadcrumb_item($lang->trashbin, "");
+    $page->output_header($lang->trashbin);
     $page->output_nav_tabs($sub_tabs, 'trashbin_posts');
 
     $table = new Table;
-    $table->construct_header("Thread subject", array());
-    $table->construct_header("Post subject", array());
-    $table->construct_header("Poster", array());
-    $table->construct_header("Deleted by", array());
-    $table->construct_header("Deleted on", array());
+    $table->construct_header($lang->trashbin_thread_subject, array());
+    $table->construct_header($lang->trashbin_post_subject, array());
+    $table->construct_header($lang->trashbin_poster, array());
+    $table->construct_header($lang->trashbin_deleted_by, array());
+    $table->construct_header($lang->trashbin_deleted_on, array());
     $table->construct_header("", array());
 
     $numquery = $db->simple_select('trashbin_posts_single', '*', '');
@@ -74,9 +74,9 @@ if ($mybb->get_input('action') == 'posts') {
         "limit" => 30));
 
     if (!$db->num_rows($query)) {
-        $table->construct_cell('<div align="center">The trash bin is empty</div>', array('colspan' => 6));
+        $table->construct_cell('<div align="center">'.$lang->trashbin_empty.'</div>', array('colspan' => 6));
         $table->construct_row();
-        $table->output("Post Trash Bin");
+        $table->output($lang->trashbin_post_bin);
     } else {
         while ($post = $db->fetch_array($query)) {
             $restore_link = "index.php?module=tools-trashbin&amp;action=postrestore&amp;pid={$post['pid']}";
@@ -86,7 +86,7 @@ if ($mybb->get_input('action') == 'posts') {
             if ($thread) {
                 $table->construct_cell("<a href='../showthread.php?tid=" . $thread['tid'] . "'>" . $thread['subject'] . "</a>");
             } else {
-                $table->construct_cell("- REMOVED THREAD -");
+                $table->construct_cell("- ".$lang->trashbin_removed_thread." -");
             }
 
             $table->construct_cell($post['subject']);
@@ -102,17 +102,17 @@ if ($mybb->get_input('action') == 'posts') {
             $table->construct_cell(date("d-m-Y H:i", $post['deletetime']));
 
             $popup = new PopupMenu("post_{$post['pid']}", $lang->options);
-            $popup->add_item("View", $view_link);
+            $popup->add_item($lang->trashbin_view, $view_link);
 
             if ($thread) {
-                $popup->add_item("Restore", $restore_link);
+                $popup->add_item($lang->trashbin_restore, $restore_link);
             }
 
             $table->construct_cell($popup->fetch(), array('class' => 'align_center'));
 
             $table->construct_row();
         }
-        $table->output("Post Trash Bin");
+        $table->output($lang->trashbin_post_bin);
 
         echo draw_admin_pagination($pagenr, 30, $total, $trashbin->build_url(array("action" => "posts")));
     }
