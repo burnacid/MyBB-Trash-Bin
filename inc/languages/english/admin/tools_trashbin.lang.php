@@ -36,6 +36,7 @@ $l['trashbin_empty'] = 'The trashbin is empty';
 $l['trashbin_removed_thread'] = 'REMOVED THREAD';
 $l['trashbin_view'] = 'View';
 $l['trashbin_restore'] = 'Restore';
+$l['trashbin_posts'] = "Posts";
 
 $l['trashbin_no_posts'] = 'This thread does not contain any posts!';
 $l['trashbin_no_thread_exists'] = 'The thread you tried to view doesn\'t exist!';

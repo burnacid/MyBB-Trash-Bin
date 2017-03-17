@@ -265,11 +265,11 @@ if ($mybb->get_input('action') == 'posts') {
     $page->output_nav_tabs($sub_tabs, 'trashbin_threads');
 
     $table = new Table;
-    $table->construct_header("Thread subject", array());
-    $table->construct_header("Poster", array());
-    $table->construct_header("Posts", array());
-    $table->construct_header("Deleted by", array());
-    $table->construct_header("Deleted on", array());
+    $table->construct_header($lang->trashbin_thread_subject, array());
+    $table->construct_header($lang->trashbin_poster, array());
+    $table->construct_header($lang->trashbin_posts, array());
+    $table->construct_header($lang->trashbin_deleted_by, array());
+    $table->construct_header($lang->trashbin_deleted_on, array());
     $table->construct_header("", array());
 
     $numquery = $db->simple_select('trashbin_threads', '*', '');
@@ -295,9 +295,9 @@ if ($mybb->get_input('action') == 'posts') {
         "limit" => 30));
 
     if (!$db->num_rows($query)) {
-        $table->construct_cell('<div align="center">The trash bin is empty</div>', array('colspan' => 6));
+        $table->construct_cell('<div align="center">'.$lang->trashbin_empty.'</div>', array('colspan' => 6));
         $table->construct_row();
-        $table->output("Threads Trash Bin");
+        $table->output($lang->trashbin_thread_bin);
     } else {
         while ($thread = $db->fetch_array($query)) {
             $restore_link = "index.php?module=tools-trashbin&amp;action=threadrestore&amp;tid={$thread['tid']}";
@@ -320,14 +320,14 @@ if ($mybb->get_input('action') == 'posts') {
             $table->construct_cell(date("d-m-Y H:i", $thread['deletetime']));
 
             $popup = new PopupMenu("thread_{$thread['tid']}", $lang->options);
-            $popup->add_item("View", $view_link);
-            $popup->add_item("Restore", $restore_link);
+            $popup->add_item($lang->trashbin_view, $view_link);
+            $popup->add_item($lang->trashbin_restore, $restore_link);
 
             $table->construct_cell($popup->fetch(), array('class' => 'align_center'));
 
             $table->construct_row();
         }
-        $table->output("Threads Trash Bin");
+        $table->output($lang->trashbin_thread_bin);
 
         echo draw_admin_pagination($pagenr, 30, $total, $trashbin->build_url());
     }
