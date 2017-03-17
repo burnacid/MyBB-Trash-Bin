@@ -239,7 +239,7 @@ if ($mybb->get_input('action') == 'posts') {
         $result = trashbin_restore_thread($mybb->input['tid']);
 
         if ($result[0]) {
-            $trashbin->admin_redirect("The selected thread has been restored.", false);
+            $trashbin->admin_redirect($lang->trashbin_thread_restored, false);
         } else {
             $trashbin->admin_redirect($result[1], true);
         }
@@ -251,12 +251,12 @@ if ($mybb->get_input('action') == 'posts') {
         $result = trashbin_restore_post($mybb->input['pid']);
 
         if ($result[0]) {
-            $trashbin->admin_redirect("The selected post has been restored.", false, "posts");
+            $trashbin->admin_redirect($lang->trashbin_post_restored, false, "posts");
         } else {
             $trashbin->admin_redirect($result[1], true, "posts");
         }
     } else {
-        $trashbin->admin_redirect("Oops something went wrong", true, "posts");
+        $trashbin->admin_redirect($lang->trashbin_wrong, true, "posts");
     }
 } else {
 

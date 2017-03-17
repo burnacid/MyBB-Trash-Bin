@@ -9,6 +9,9 @@ $l['trashbin_restore_thread_removed'] = "Thread does not longer exist!";
 $l['trashbin_restore_no_post'] = "The post your are trying to restore is not found!";
 $l['trashbin_restore_forum_removed'] = "Forum does not longer exist!";
 $l['trashbin_restore_no_thread'] = "The thread your are trying to restore is not found!";
+$l['trashbin_thread_restored'] = "The selected thread has been restored.";
+$l['trashbin_post_restored'] = "The selected post has been restored.";
+$l['trashbin_wrong'] = "Oops something went wrong";
 
 $l['trashbin_admin_permission'] = "Can manage trash bin?";
 
