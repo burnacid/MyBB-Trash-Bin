@@ -1,7 +1,7 @@
 <?php
 
 $trashbin = new trashbin;
-$lang->load('trashbin');
+$lang->load('tools_trashbin');
 
 $sub_tabs['trashbin_threads'] = array(
     'title' => $lang->trashbin_thread_bin,
