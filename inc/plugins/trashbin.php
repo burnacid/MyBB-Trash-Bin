@@ -333,6 +333,7 @@ function trashbin_escape_post($post)
     $post['username'] = $db->escape_string($post['username']);
     $post['message'] = $db->escape_string($post['message']);
     $post['editreason'] = $db->escape_string($post['editreason']);
+    $post['ipaddress'] = $db->escape_string($post['ipaddress']);
 
     return $post;
 }
