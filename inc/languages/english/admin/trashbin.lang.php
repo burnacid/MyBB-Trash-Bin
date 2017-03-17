@@ -27,5 +27,5 @@ $l['trashbin_restore'] = 'Restore';
 $l['trashbin_no_posts'] = 'This thread does not contain any posts!';
 $l['trashbin_no_thread_exists'] = 'The thread you tried to view doesn\'t exist!';
 $l['trashbin_no_post_exists'] = 'The post you tried to view doesn\'t exist!';
-$l['trashbin_edited'] = 'This post was last modified';
+$l['trashbin_edited'] = 'This post was last modified:';
 $l['trashbin_by'] = 'by';
