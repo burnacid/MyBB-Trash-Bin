@@ -1,6 +1,16 @@
 <?php
 
 $l['trashbin'] = 'Trash Bin';
+$l['trashbin_desc'] = 'Moves all permanently deleted threads to a trashbin for 60 days';
+$l['trashbin_uninstall'] = "Uninstall Trashbin plugin";
+$l['trashbin_uninstall_question'] = "Are you sure you want to uninstall the Trash bin plugin? This will delete the complete contents of the trashbin.";
+
+$l['trashbin_restore_thread_removed'] = "Thread does not longer exist!";
+$l['trashbin_restore_no_post'] = "The post your are trying to restore is not found!";
+$l['trashbin_restore_forum_removed'] = "Forum does not longer exist!";
+$l['trashbin_restore_no_thread'] = "The thread your are trying to restore is not found!";
+
+$l['trashbin_admin_permission'] = "Can manage trash bin?";
 
 $l['trashbin_thread_bin'] = 'Thread Trash Bin';
 $l['trashbin_thread_bin_desc'] = 'View all removed threads';

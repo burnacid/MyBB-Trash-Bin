@@ -5,8 +5,8 @@ if (!defined('IN_MYBB'))
 
 //HOOKS
 if (defined('IN_ADMINCP')) {
-    $plugins->add_hook('admin_tools_menu', create_function('&$args', '$args[] = array(\'id\' => \'trashbin\', \'title\' => \'Trash Bin\', \'link\' => \'index.php?module=tools-trashbin\');'));
-    $plugins->add_hook('admin_tools_action_handler', create_function('&$args', '$args[\'trashbin\'] = array(\'active\' => \'trashbin\', \'file\' => \'trashbin.php\');'));
+    $plugins->add_hook('admin_tools_menu', create_function('&$args', 'global $lang; $args[] = array(\'id\' => \'trashbin\', \'title\' => $lang->trashbin, \'link\' => \'index.php?module=tools-trashbin\');'));
+    //$plugins->add_hook('admin_tools_action_handler', create_function('&$args', '$args[\'trashbin\'] = array(\'active\' => \'trashbin\', \'file\' => \'trashbin.php\');'));
 } else {
     if ($mybb->settings['trashbin_enabled']) {
         $plugins->add_hook("class_moderation_delete_thread_start", "trashbin_delete_thread");
@@ -16,13 +16,16 @@ if (defined('IN_ADMINCP')) {
 
 function trashbin_info()
 {
+    global $lang;
+    $lang->load("tools_trashbin");
+    
     return array(
-        'name' => 'Trash Bin',
-        'description' => 'Moves all permanently deleted threads to a trashbin for 60 days',
+        'name' => $lang->trashbin,
+        'description' => $lang->trashbin_desc,
         'website' => 'https://github.com/burnacid/MyBB-Trash-Bin',
         'author' => 'S. Lenders',
         'authorsite' => 'http://lenders-it.nl',
-        'version' => '1.1',
+        'version' => '2.0',
         'compatibility' => '18*',
         'codename' => 'trashbin');
 }
@@ -137,7 +140,6 @@ function trashbin_install()
           FULLTEXT KEY `message` (`message`)
         ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
         ");
-
     }
 
 }
@@ -193,13 +195,15 @@ function trashbin_deactivate()
 }
 function trashbin_uninstall()
 {
-    global $db, $mybb;
+    global $db, $mybb, $lang;
+    
+    $lang->load("tools_trashbin");
 
     if ($mybb->request_method != 'post') {
         global $page;
 
         $page->output_confirm_action('index.php?module=config-plugins&action=deactivate&uninstall=1&plugin=trashbin',
-            "Are you sure you want to uninstall the Trash bin plugin? This will delete the complete contents of the trashbin.", "Uninstall Trashbin plugin");
+            $lang->trashbin_uninstall_question, $lang->trashbin_uninstall);
     }
 
     // This is required so it updates the settings.php file as well and not only the database - they must be synchronized!
@@ -234,7 +238,7 @@ function trashbin_delete_post($pid)
 
 function trashbin_restore_post($pid)
 {
-    global $db, $mybb;
+    global $db, $mybb, $lang;
 
     $query = $db->simple_select("trashbin_posts_single", "*", "pid = " . intval($pid));
 
@@ -254,11 +258,11 @@ function trashbin_restore_post($pid)
 
             return array(true);
         } else {
-            return array(false, "Thread does not longer exist!");
+            return array(false, $lang->trashbin_restore_thread_removed);
         }
 
     } else {
-        return array(false, "The post your are trying to restore is not found!");
+        return array(false, $lang->trashbin_restore_no_post);
     }
 }
 
@@ -318,10 +322,10 @@ function trashbin_restore_thread($tid)
 
             return array(true);
         } else {
-            return array(false, "Forum does not longer exist!");
+            return array(false, $lang->trashbin_restore_forum_removed);
         }
     } else {
-        return array(false, "The thread your are trying to restore is not found!");
+        return array(false, $lang->trashbin_restore_no_thread);
     }
 }
 
@@ -353,7 +357,9 @@ function trashbin_escape_thread($thread)
 $plugins->add_hook('admin_tools_permissions', 'trashbin_admin_tools_permissions');
 function trashbin_admin_tools_permissions(&$admin_permissions)
 {
-    $admin_permissions['trashbin'] = "Can manage trash bin?";
+    global $lang;
+    
+    $admin_permissions['trashbin'] = $lang->trashbin_admin_permission;
 }
 
 $plugins->add_hook('admin_config_action_handler', 'trashbin_admin_config_action_handler');
