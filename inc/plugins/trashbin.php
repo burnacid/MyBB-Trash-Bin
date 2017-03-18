@@ -3,6 +3,8 @@
 if (!defined('IN_MYBB'))
     die('This file cannot be accessed directly.');
 
+global $mybb;
+
 //HOOKS
 if (defined('IN_ADMINCP')) {
     $plugins->add_hook('admin_tools_menu', create_function('&$args', '$args[] = array(\'id\' => \'trashbin\', \'title\' => \'Trash Bin\', \'link\' => \'index.php?module=tools-trashbin\');'));
