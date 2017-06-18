@@ -5,6 +5,11 @@ if (!defined('IN_MYBB'))
 
 global $mybb;
 
+if(!defined("PLUGINLIBRARY"))
+{
+    define("PLUGINLIBRARY", MYBB_ROOT."inc/plugins/pluginlibrary.php");
+} 
+
 //HOOKS
 if (defined('IN_ADMINCP')) {
     $plugins->add_hook('admin_tools_menu', create_function('&$args', '$args[] = array(\'id\' => \'trashbin\', \'title\' => \'Trash Bin\', \'link\' => \'index.php?module=tools-trashbin\');'));
