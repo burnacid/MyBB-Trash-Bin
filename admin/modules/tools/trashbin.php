@@ -98,7 +98,7 @@ if ($mybb->get_input('action') == 'posts') {
 
             //deleter
             $deletedby = get_user($post['deletedby']);
-            $table->construct_cell("<a href='../member.php?uid=" . $deletedby['uid'] . "'>" . $deletedby['username'] . "</a>");
+            $table->construct_cell("<a href='../member.php?uid=" . $deletedby['uid'] . "'>" . htmlspecialchars_uni($deletedby['username']) . "</a>");
 
             $table->construct_cell(date("d-m-Y H:i", $post['deletetime']));
 
@@ -316,7 +316,7 @@ if ($mybb->get_input('action') == 'posts') {
 
             //deleter
             $deletedby = get_user($thread['deletedby']);
-            $table->construct_cell("<a href='../member.php?uid=" . $deletedby['uid'] . "'>" . $deletedby['username'] . "</a>");
+            $table->construct_cell("<a href='../member.php?uid=" . $deletedby['uid'] . "'>" . htmlspecialchars_uni($deletedby['username']) . "</a>");
 
             $table->construct_cell(date("d-m-Y H:i", $thread['deletetime']));
 
