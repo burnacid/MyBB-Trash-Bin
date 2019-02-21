@@ -183,7 +183,7 @@ if ($mybb->get_input('action') == 'posts') {
                         $table->output("");
                         $num++;
                     }
-                    
+
                     echo draw_admin_pagination($pagenr, 10, $total, $trashbin->build_url(array("action"=>"viewthread","tid"=>$thread['tid'])));
                 }
             } else {
@@ -302,6 +302,7 @@ if ($mybb->get_input('action') == 'posts') {
             $restore_link = "index.php?module=tools-trashbin&amp;action=threadrestore&amp;tid={$thread['tid']}";
             $view_link = "index.php?module=tools-trashbin&amp;action=viewthread&amp;tid={$thread['tid']}";
 
+            $thread['subject'] = htmlspecialchars_uni($thread['subject']);
             $table->construct_cell($thread['subject']);
 
             //poster
