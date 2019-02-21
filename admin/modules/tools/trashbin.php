@@ -94,7 +94,7 @@ if ($mybb->get_input('action') == 'posts') {
 
             //poster
             $poster = get_user($post['uid']);
-            $table->construct_cell("<a href='../member.php?uid=" . $poster['uid'] . "'>" . $poster['username'] . "</a>");
+            $table->construct_cell("<a href='../member.php?uid=" . $poster['uid'] . "'>" . htmlspecialchars_uni($poster['username']) . "</a>");
 
             //deleter
             $deletedby = get_user($post['deletedby']);
@@ -308,7 +308,7 @@ if ($mybb->get_input('action') == 'posts') {
 
             //poster
             $poster = get_user($thread['uid']);
-            $table->construct_cell("<a href='../member.php?uid=" . $poster['uid'] . "'>" . $poster['username'] . "</a>");
+            $table->construct_cell("<a href='../member.php?uid=" . $poster['uid'] . "'>" . htmlspecialchars_uni($poster['username']) . "</a>");
 
             //num posts
             $query2 = $db->simple_select("trashbin_posts", "pid", "tid = " . $thread['tid']);
