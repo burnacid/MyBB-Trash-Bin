@@ -84,7 +84,7 @@ if ($mybb->get_input('action') == 'posts') {
 
             $thread = get_thread($post['tid']);
             if ($thread) {
-                $table->construct_cell("<a href='../showthread.php?tid=" . $thread['tid'] . "'>" . $thread['subject'] . "</a>");
+                $table->construct_cell("<a href='../showthread.php?tid=" . $thread['tid'] . "'>" . htmlspecialchars_uni($thread['subject']) . "</a>");
             } else {
                 $table->construct_cell("- REMOVED THREAD -");
             }
