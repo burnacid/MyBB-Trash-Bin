@@ -79,7 +79,7 @@ if ($mybb->get_input('action') == 'posts') {
         $table->output("Post Trash Bin");
     } else {
         while ($post = $db->fetch_array($query)) {
-            $restore_link = "index.php?module=tools-trashbin&amp;action=postrestore&amp;pid={$post['pid']}";
+            $restore_link = "index.php?module=tools-trashbin&amp;action=postrestore&amp;pid={$post['pid']}&amp;my_post_key={$mybb->post_code}";
             $view_link = "index.php?module=tools-trashbin&amp;action=viewpost&amp;pid={$post['pid']}";
 
             $thread = get_thread($post['tid']);
@@ -89,15 +89,16 @@ if ($mybb->get_input('action') == 'posts') {
                 $table->construct_cell("- REMOVED THREAD -");
             }
 
+            $post['subject'] = htmlspecialchars_uni($post['subject']);
             $table->construct_cell($post['subject']);
 
             //poster
             $poster = get_user($post['uid']);
-            $table->construct_cell("<a href='../member.php?uid=" . $poster['uid'] . "'>" . $poster['username'] . "</a>");
+            $table->construct_cell("<a href='../member.php?uid=" . $poster['uid'] . "'>" . htmlspecialchars_uni($poster['username']) . "</a>");
 
             //deleter
             $deletedby = get_user($post['deletedby']);
-            $table->construct_cell("<a href='../member.php?uid=" . $deletedby['uid'] . "'>" . $deletedby['username'] . "</a>");
+            $table->construct_cell("<a href='../member.php?uid=" . $deletedby['uid'] . "'>" . htmlspecialchars_uni($deletedby['username']) . "</a>");
 
             $table->construct_cell(date("d-m-Y H:i", $post['deletetime']));
 
@@ -183,7 +184,7 @@ if ($mybb->get_input('action') == 'posts') {
                         $table->output("");
                         $num++;
                     }
-                    
+
                     echo draw_admin_pagination($pagenr, 10, $total, $trashbin->build_url(array("action"=>"viewthread","tid"=>$thread['tid'])));
                 }
             } else {
@@ -234,7 +235,7 @@ if ($mybb->get_input('action') == 'posts') {
 
     $page->output_footer();
 } elseif ($mybb->get_input('action') == 'threadrestore') {
-    if ($mybb->input['tid']) {
+    if ($mybb->input['tid'] && $mybb->input['my_post_key']) {
         $result = trashbin_restore_thread($mybb->input['tid']);
 
         if ($result[0]) {
@@ -246,7 +247,7 @@ if ($mybb->get_input('action') == 'posts') {
         $trashbin->admin_redirect();
     }
 } elseif ($mybb->get_input('action') == 'postrestore') {
-    if ($mybb->input['pid']) {
+    if ($mybb->input['pid'] && $mybb->input['my_post_key']) {
         $result = trashbin_restore_post($mybb->input['pid']);
 
         if ($result[0]) {
@@ -299,14 +300,15 @@ if ($mybb->get_input('action') == 'posts') {
         $table->output("Threads Trash Bin");
     } else {
         while ($thread = $db->fetch_array($query)) {
-            $restore_link = "index.php?module=tools-trashbin&amp;action=threadrestore&amp;tid={$thread['tid']}";
+            $restore_link = "index.php?module=tools-trashbin&amp;action=threadrestore&amp;tid={$thread['tid']}&amp;my_post_key={$mybb->post_code}";
             $view_link = "index.php?module=tools-trashbin&amp;action=viewthread&amp;tid={$thread['tid']}";
 
+            $thread['subject'] = htmlspecialchars_uni($thread['subject']);
             $table->construct_cell($thread['subject']);
 
             //poster
             $poster = get_user($thread['uid']);
-            $table->construct_cell("<a href='../member.php?uid=" . $poster['uid'] . "'>" . $poster['username'] . "</a>");
+            $table->construct_cell("<a href='../member.php?uid=" . $poster['uid'] . "'>" . htmlspecialchars_uni($poster['username']) . "</a>");
 
             //num posts
             $query2 = $db->simple_select("trashbin_posts", "pid", "tid = " . $thread['tid']);
@@ -314,7 +316,7 @@ if ($mybb->get_input('action') == 'posts') {
 
             //deleter
             $deletedby = get_user($thread['deletedby']);
-            $table->construct_cell("<a href='../member.php?uid=" . $deletedby['uid'] . "'>" . $deletedby['username'] . "</a>");
+            $table->construct_cell("<a href='../member.php?uid=" . $deletedby['uid'] . "'>" . htmlspecialchars_uni($deletedby['username']) . "</a>");
 
             $table->construct_cell(date("d-m-Y H:i", $thread['deletetime']));
 
