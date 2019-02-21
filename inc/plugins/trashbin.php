@@ -8,7 +8,7 @@ global $mybb;
 if(!defined("PLUGINLIBRARY"))
 {
     define("PLUGINLIBRARY", MYBB_ROOT."inc/plugins/pluginlibrary.php");
-} 
+}
 
 //HOOKS
 if (defined('IN_ADMINCP')) {
@@ -375,13 +375,13 @@ function trashbin_admin_config_action_handler(&$actions)
 function trashbin_parse_post($post,$num)
 {
     $poster = get_user($post['uid']);
-    
+
     if($post['edituid']){
         $edituser = get_user($post['edituid']);
         $edit = "<span class='post_edit' id='edited_by_6092' ><span class='edited_post' >(This post was last modified: ".date("d-m-Y h:i A",$post['edittime'])." by ".build_profile_link($edituser['username'],$edituser['uid']).".)</span></span>";
     }
-    
-    $parser = new postParser; 
+
+    $parser = new postParser;
     $parser_options = array(
         'allow_html' => 'no',
         'allow_mycode' => 'yes',
@@ -390,16 +390,16 @@ function trashbin_parse_post($post,$num)
         'filter_badwords' => 'yes',
         'nl2br' => 'yes'
     );
-    
-    $message = $parser->parse_message($post['message'], $parser_options); 
+
+    $message = $parser->parse_message($post['message'], $parser_options);
     $message = nl2br($message);
-    
+
     $head = "<div class='post_author'>
             <div class='author_information' >
-            	<strong><span class='largetext' >".build_profile_link($poster['username'],$poster['uid'])."</span></strong>
+            	<strong><span class='largetext' >".build_profile_link(htmlspecialchars_uni($poster['username'],$poster['uid']))."</span></strong>
             </div>
         </div>";
-    
+
     $middle  = "<div class='post_head' >
                 <div class='float_right' style='vertical-align: top' >
                     <strong>#".$num."</strong>
@@ -409,11 +409,11 @@ function trashbin_parse_post($post,$num)
                 </span>
         		<hr style='border: 0;border-bottom: 1px dashed #bbb;'>
         	</div>";
-    
+
     $content = "<div class='post_body' id='pid_".$post['pid']."' >
                 ".$message."
         	</div>";
-    
+
     return array("head" => $head, "middle" => $middle, "content" => $content);
 }
 
