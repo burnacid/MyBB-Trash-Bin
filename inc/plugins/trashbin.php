@@ -391,7 +391,7 @@ function trashbin_parse_post($post,$num)
         'nl2br' => 'yes'
     );
 
-    $message = $parser->parse_message($post['message'], $parser_options);
+    $message = $parser->parse_message(htmlspecialchars_uni($post['message']), $parser_options);
     $message = nl2br($message);
 
     $head = "<div class='post_author'>
