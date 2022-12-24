@@ -1,44 +1,63 @@
 <?php
 
+if (!defined("IN_MYBB"))
+{
+    die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
+}
+
+if (!is_object($trashbin))
+{
+    require_once MYBB_ROOT . "inc/plugins/trashbin.php";
+    $trashbin = new trashbin;
+}
+
 $trashbin = new trashbin;
 
 $sub_tabs['trashbin_threads'] = array(
     'title' => 'Thread Trash Bin',
     'link' => 'index.php?module=tools-trashbin',
-    'description' => 'View all removed threads.');
+    'description' => 'View all removed threads.'
+);
 $sub_tabs['trashbin_posts'] = array(
     'title' => 'Post Trash Bin',
     'link' => 'index.php?module=tools-trashbin&amp;action=posts',
-    'description' => 'View all removed posts.');
+    'description' => 'View all removed posts.'
+);
 
-switch ($mybb->get_input('action')) {
+switch ($mybb->get_input('action'))
+{
     case 'threadrestore':
         $sub_tabs['trashbin_threadrestore'] = array(
             'title' => "Restore thread",
             'link' => 'index.php?module=tools-trashbin&amp;action=threadrestore&amp;tid=' . $mybb->input['tid'],
-            'description' => "");
+            'description' => ""
+        );
         break;
     case 'postrestore':
         $sub_tabs['trashbin_postrestore'] = array(
             'title' => "Restore post",
             'link' => 'index.php?module=tools-trashbin&amp;action=postrestore&amp;pid=' . $mybb->input['pid'],
-            'description' => "");
+            'description' => ""
+        );
         break;
     case 'viewthread':
         $sub_tabs['trashbin_viewthread'] = array(
             'title' => "View Thread",
             'link' => 'index.php?module=tools-trashbin&amp;action=viewthread&amp;tid=' . $mybb->input['tid'],
-            'description' => "View thread");
+            'description' => "View thread"
+        );
         break;
     case 'viewpost':
         $sub_tabs['trashbin_viewpost'] = array(
             'title' => "View Post",
             'link' => 'index.php?module=tools-trashbin&amp;action=viewpost&amp;pid=' . $mybb->input['pid'],
-            'description' => "View single post");
+            'description' => "View single post"
+        );
         break;
 }
 
-if ($mybb->get_input('action') == 'posts') {
+if ($mybb->get_input('action') == 'posts')
+{
     $page->add_breadcrumb_item("Trash Bin", "");
     $page->output_header("Trash Bin");
     $page->output_nav_tabs($sub_tabs, 'trashbin_posts');
@@ -54,15 +73,19 @@ if ($mybb->get_input('action') == 'posts') {
     $numquery = $db->simple_select('trashbin_posts_single', '*', '');
     $total = $db->num_rows($numquery);
 
-    if ($mybb->input['page']) {
+    if ($mybb->input['page'])
+    {
         $pagenr = intval($mybb->input['page']);
         $pagestart = (($pagenr - 1) * 30);
 
-        if ((($pagenr - 1) * 30) > $total) {
+        if ((($pagenr - 1) * 30) > $total)
+        {
             $pagenr = 1;
             $pagestart = 0;
         }
-    } else {
+    }
+    else
+    {
         $pagenr = 1;
         $pagestart = 0;
     }
@@ -71,21 +94,29 @@ if ($mybb->get_input('action') == 'posts') {
         "order_by" => "deletetime",
         "order_dir" => "DESC",
         "limit_start" => $pagestart,
-        "limit" => 30));
+        "limit" => 30
+    ));
 
-    if (!$db->num_rows($query)) {
+    if (!$db->num_rows($query))
+    {
         $table->construct_cell('<div align="center">The trash bin is empty</div>', array('colspan' => 6));
         $table->construct_row();
         $table->output("Post Trash Bin");
-    } else {
-        while ($post = $db->fetch_array($query)) {
+    }
+    else
+    {
+        while ($post = $db->fetch_array($query))
+        {
             $restore_link = "index.php?module=tools-trashbin&amp;action=postrestore&amp;pid={$post['pid']}&amp;my_post_key={$mybb->post_code}";
             $view_link = "index.php?module=tools-trashbin&amp;action=viewpost&amp;pid={$post['pid']}";
 
             $thread = get_thread($post['tid']);
-            if ($thread) {
+            if ($thread)
+            {
                 $table->construct_cell("<a href='../showthread.php?tid=" . $thread['tid'] . "'>" . htmlspecialchars_uni($thread['subject']) . "</a>");
-            } else {
+            }
+            else
+            {
                 $table->construct_cell("- REMOVED THREAD -");
             }
 
@@ -105,7 +136,8 @@ if ($mybb->get_input('action') == 'posts') {
             $popup = new PopupMenu("post_{$post['pid']}", $lang->options);
             $popup->add_item("View", $view_link);
 
-            if ($thread) {
+            if ($thread)
+            {
                 $popup->add_item("Restore", $restore_link);
             }
 
@@ -119,7 +151,9 @@ if ($mybb->get_input('action') == 'posts') {
     }
 
     $page->output_footer();
-} elseif ($mybb->get_input('action') == 'viewthread') {
+}
+elseif ($mybb->get_input('action') == 'viewthread')
+{
 
     require_once MYBB_ROOT . "inc/class_parser.php";
 
@@ -128,17 +162,22 @@ if ($mybb->get_input('action') == 'posts') {
     $page->output_header("Trash Bin");
     $page->output_nav_tabs($sub_tabs, 'trashbin_viewthread');
 
-    if ($mybb->input['tid']) {
+    if ($mybb->input['tid'])
+    {
         $query = $db->simple_select("trashbin_threads", "*", "tid = " . intval($mybb->input['tid']), array("order_by" => "dateline", "order_dir" => "asc"));
 
-        if ($db->num_rows($query) == 1) {
+        if ($db->num_rows($query) == 1)
+        {
             $thread = $db->fetch_array($query);
             $query2 = $db->simple_select("trashbin_posts", "*", "tid = " . $thread['tid']);
 
-            if ($total = $db->num_rows($query2)) {
-                if ($total <= 10) {
+            if ($total = $db->num_rows($query2))
+            {
+                if ($total <= 10)
+                {
                     $num = 1;
-                    while ($post = $db->fetch_array($query2)) {
+                    while ($post = $db->fetch_array($query2))
+                    {
                         $parsed_post = trashbin_parse_post($post, $num);
 
                         $table = new Table;
@@ -150,16 +189,22 @@ if ($mybb->get_input('action') == 'posts') {
                         $table->output("");
                         $num++;
                     }
-                } else {
-                    if ($mybb->input['page']) {
+                }
+                else
+                {
+                    if ($mybb->input['page'])
+                    {
                         $pagenr = intval($mybb->input['page']);
                         $pagestart = (($pagenr - 1) * 10);
 
-                        if ((($pagenr - 1) * 10) > $total) {
+                        if ((($pagenr - 1) * 10) > $total)
+                        {
                             $pagenr = 1;
                             $pagestart = 0;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         $pagenr = 1;
                         $pagestart = 0;
                     }
@@ -170,9 +215,11 @@ if ($mybb->get_input('action') == 'posts') {
                         "order_by" => "dateline",
                         "order_dir" => "asc",
                         "limit_start" => $pagestart,
-                        "limit" => 10));
+                        "limit" => 10
+                    ));
 
-                    while ($post = $db->fetch_array($query2)) {
+                    while ($post = $db->fetch_array($query2))
+                    {
                         $parsed_post = trashbin_parse_post($post, $num);
 
                         $table = new Table;
@@ -185,22 +232,29 @@ if ($mybb->get_input('action') == 'posts') {
                         $num++;
                     }
 
-                    echo draw_admin_pagination($pagenr, 10, $total, $trashbin->build_url(array("action"=>"viewthread","tid"=>$thread['tid'])));
+                    echo draw_admin_pagination($pagenr, 10, $total, $trashbin->build_url(array("action" => "viewthread", "tid" => $thread['tid'])));
                 }
-            } else {
+            }
+            else
+            {
                 $trashbin->admin_redirect("This thread does not contain any posts!", true, "posts");
             }
-        } else {
+        }
+        else
+        {
             $trashbin->admin_redirect("The thread you tried to view doesn't exist!", true, "posts");
         }
-
-    } else {
+    }
+    else
+    {
         $trashbin->admin_redirect("The thread you tried to view doesn't exist!", true, "posts");
     }
 
 
     $page->output_footer();
-} elseif ($mybb->get_input('action') == 'viewpost') {
+}
+elseif ($mybb->get_input('action') == 'viewpost')
+{
 
     require_once MYBB_ROOT . "inc/class_parser.php";
 
@@ -209,10 +263,12 @@ if ($mybb->get_input('action') == 'posts') {
     $page->output_header("Trash Bin");
     $page->output_nav_tabs($sub_tabs, 'trashbin_viewpost');
 
-    if ($mybb->input['pid']) {
+    if ($mybb->input['pid'])
+    {
         $query = $db->simple_select("trashbin_posts_single", "*", "pid = " . intval($mybb->input['pid']));
 
-        if ($db->num_rows($query) == 1) {
+        if ($db->num_rows($query) == 1)
+        {
             $post = $db->fetch_array($query);
 
             $parsed_post = trashbin_parse_post($post, 1);
@@ -224,41 +280,62 @@ if ($mybb->get_input('action') == 'posts') {
             $table->construct_row();
 
             $table->output("");
-        } else {
+        }
+        else
+        {
             $trashbin->admin_redirect("The post you tried to view doesn't exist!", true, "posts");
         }
-
-    } else {
+    }
+    else
+    {
         $trashbin->admin_redirect("The post you tried to view doesn't exist!", true, "posts");
     }
 
 
     $page->output_footer();
-} elseif ($mybb->get_input('action') == 'threadrestore') {
-    if ($mybb->input['tid'] && $mybb->input['my_post_key']) {
+}
+elseif ($mybb->get_input('action') == 'threadrestore')
+{
+    if ($mybb->input['tid'] && $mybb->input['my_post_key'])
+    {
         $result = trashbin_restore_thread($mybb->input['tid']);
 
-        if ($result[0]) {
+        if ($result[0])
+        {
             $trashbin->admin_redirect("The selected thread has been restored.", false);
-        } else {
+        }
+        else
+        {
             $trashbin->admin_redirect($result[1], true);
         }
-    } else {
+    }
+    else
+    {
         $trashbin->admin_redirect();
     }
-} elseif ($mybb->get_input('action') == 'postrestore') {
-    if ($mybb->input['pid'] && $mybb->input['my_post_key']) {
+}
+elseif ($mybb->get_input('action') == 'postrestore')
+{
+    if ($mybb->input['pid'] && $mybb->input['my_post_key'])
+    {
         $result = trashbin_restore_post($mybb->input['pid']);
 
-        if ($result[0]) {
+        if ($result[0])
+        {
             $trashbin->admin_redirect("The selected post has been restored.", false, "posts");
-        } else {
+        }
+        else
+        {
             $trashbin->admin_redirect($result[1], true, "posts");
         }
-    } else {
+    }
+    else
+    {
         $trashbin->admin_redirect("Oops something went wrong", true, "posts");
     }
-} else {
+}
+else
+{
 
     $page->add_breadcrumb_item("Trash Bin", "");
     $page->output_header("Trash Bin");
@@ -275,15 +352,19 @@ if ($mybb->get_input('action') == 'posts') {
     $numquery = $db->simple_select('trashbin_threads', '*', '');
     $total = $db->num_rows($numquery);
 
-    if ($mybb->input['page']) {
+    if ($mybb->input['page'])
+    {
         $pagenr = intval($mybb->input['page']);
         $pagestart = (($pagenr - 1) * 30);
 
-        if ((($pagenr - 1) * 30) > $total) {
+        if ((($pagenr - 1) * 30) > $total)
+        {
             $pagenr = 1;
             $pagestart = 0;
         }
-    } else {
+    }
+    else
+    {
         $pagenr = 1;
         $pagestart = 0;
     }
@@ -292,14 +373,19 @@ if ($mybb->get_input('action') == 'posts') {
         "order_by" => "deletetime",
         "order_dir" => "DESC",
         "limit_start" => $pagestart,
-        "limit" => 30));
+        "limit" => 30
+    ));
 
-    if (!$db->num_rows($query)) {
+    if (!$db->num_rows($query))
+    {
         $table->construct_cell('<div align="center">The trash bin is empty</div>', array('colspan' => 6));
         $table->construct_row();
         $table->output("Threads Trash Bin");
-    } else {
-        while ($thread = $db->fetch_array($query)) {
+    }
+    else
+    {
+        while ($thread = $db->fetch_array($query))
+        {
             $restore_link = "index.php?module=tools-trashbin&amp;action=threadrestore&amp;tid={$thread['tid']}&amp;my_post_key={$mybb->post_code}";
             $view_link = "index.php?module=tools-trashbin&amp;action=viewthread&amp;tid={$thread['tid']}";
 
@@ -335,5 +421,3 @@ if ($mybb->get_input('action') == 'posts') {
 
     $page->output_footer();
 }
-
-?>
