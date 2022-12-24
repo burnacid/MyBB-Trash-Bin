@@ -15,6 +15,7 @@ if (!defined("PLUGINLIBRARY"))
 //HOOKS
 if (defined('IN_ADMINCP'))
 {
+    $plugins->add_hook('admin_tools_permissions', 'trashbin_admin_tools_permissions');
     $plugins->add_hook('admin_tools_menu', 'trashbin_tools_menu');
     $plugins->add_hook('admin_tools_action_handler', 'trashbin_tools_action_handler');
 }
@@ -167,7 +168,7 @@ function trashbin_activate()
     ), 'retention' => array(
         'title' => 'Trash bin retention',
         'description' => 'How long will a thread or post be saved in the trash bin before getting removed',
-        'optionscode' => 'text',
+        'optionscode' => 'numeric',
         'value' => 60
     )));
 
@@ -391,20 +392,10 @@ function trashbin_escape_thread($thread)
     return $thread;
 }
 
-$plugins->add_hook('admin_tools_permissions', 'trashbin_admin_tools_permissions');
 function trashbin_admin_tools_permissions(&$admin_permissions)
 {
     $admin_permissions['trashbin'] = "Can manage trash bin?";
 }
-
-/* $plugins->add_hook('admin_config_action_handler', 'trashbin_admin_config_action_handler');
-function trashbin_admin_config_action_handler(&$actions)
-{
-    $actions['trashbin'] = array(
-        'active' => 'trashbin',
-        'file' => 'trashbin.php',
-        );
-} */
 
 function trashbin_tools_menu(&$sub_menu)
 {
@@ -429,6 +420,7 @@ function trashbin_parse_post($post, $num)
 {
     $poster = get_user($post['uid']);
 
+    $edit = '';
     if ($post['edituid'])
     {
         $edituser = get_user($post['edituid']);
@@ -450,7 +442,7 @@ function trashbin_parse_post($post, $num)
 
     $head = "<div class='post_author'>
             <div class='author_information' >
-            	<strong><span class='largetext' >" . build_profile_link(htmlspecialchars_uni($poster['username'], $poster['uid'])) . "</span></strong>
+                <strong><span class='largetext' >" . build_profile_link(htmlspecialchars_uni($poster['username'], $poster['uid'])) . "</span></strong>
             </div>
         </div>";
 
@@ -461,12 +453,12 @@ function trashbin_parse_post($post, $num)
                 <span class='post_date' style='font-size:smaller;'>" . date("d-m-Y h:i A", $post['dateline']) . "
                 " . $edit . "
                 </span>
-        		<hr style='border: 0;border-bottom: 1px dashed #bbb;'>
-        	</div>";
+                <hr style='border: 0;border-bottom: 1px dashed #bbb;'>
+            </div>";
 
     $content = "<div class='post_body' id='pid_" . $post['pid'] . "' >
                 " . $message . "
-        	</div>";
+            </div>";
 
     return array("head" => $head, "middle" => $middle, "content" => $content);
 }

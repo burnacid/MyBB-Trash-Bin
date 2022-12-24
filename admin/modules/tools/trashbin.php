@@ -5,13 +5,11 @@ if (!defined("IN_MYBB"))
     die("Direct initialization of this file is not allowed.<br /><br />Please make sure IN_MYBB is defined.");
 }
 
-if (!is_object($trashbin))
+if (!isset($trashbin) || (isset($trashbin) && !is_object($trashbin)))
 {
     require_once MYBB_ROOT . "inc/plugins/trashbin.php";
     $trashbin = new trashbin;
 }
-
-$trashbin = new trashbin;
 
 $sub_tabs['trashbin_threads'] = array(
     'title' => 'Thread Trash Bin',
@@ -73,9 +71,9 @@ if ($mybb->get_input('action') == 'posts')
     $numquery = $db->simple_select('trashbin_posts_single', '*', '');
     $total = $db->num_rows($numquery);
 
-    if ($mybb->input['page'])
+    if ($mybb->get_input('page'))
     {
-        $pagenr = intval($mybb->input['page']);
+        $pagenr = $mybb->get_input('page', MyBB::INPUT_INT);
         $pagestart = (($pagenr - 1) * 30);
 
         if ((($pagenr - 1) * 30) > $total)
@@ -192,9 +190,9 @@ elseif ($mybb->get_input('action') == 'viewthread')
                 }
                 else
                 {
-                    if ($mybb->input['page'])
+                    if ($mybb->get_input('page'))
                     {
-                        $pagenr = intval($mybb->input['page']);
+                        $pagenr = $mybb->get_input('page', MyBB::INPUT_INT);
                         $pagestart = (($pagenr - 1) * 10);
 
                         if ((($pagenr - 1) * 10) > $total)
@@ -352,9 +350,9 @@ else
     $numquery = $db->simple_select('trashbin_threads', '*', '');
     $total = $db->num_rows($numquery);
 
-    if ($mybb->input['page'])
+    if ($mybb->get_input('page'))
     {
-        $pagenr = intval($mybb->input['page']);
+        $pagenr = $mybb->get_input('page', MyBB::INPUT_INT);
         $pagestart = (($pagenr - 1) * 30);
 
         if ((($pagenr - 1) * 30) > $total)
