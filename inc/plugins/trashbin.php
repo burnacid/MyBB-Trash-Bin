@@ -36,7 +36,7 @@ function trashbin_info()
         'website' => 'https://github.com/burnacid/MyBB-Trash-Bin',
         'author' => 'S. Lenders',
         'authorsite' => 'http://lenders-it.nl',
-        'version' => '1.1.4',
+        'version' => '1.1.5',
         'compatibility' => '18*',
         'codename' => 'trashbin'
     );
